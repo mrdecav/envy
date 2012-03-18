@@ -1,0 +1,764 @@
+" Windows-specific stuff
+:if has("win32")
+:  set nocompatible
+:  source $VIMRUNTIME/vimrc_example.vim
+:  source $VIMRUNTIME/mswin.vim
+:  behave mswin
+:  colorscheme torte
+:  set nobackup
+:  set guifont=Consolas
+:endif
+
+:if has("mac")
+:  colorscheme torte
+:  set guifont=Menlo\ Regular:h14
+:  set guioptions-=T
+:  set transparency=20
+:  set nobackup
+:endif
+
+:if &term =~ "xterm"
+:if has("terminfo")
+:  set t_Co=8
+:  set t_Sf=[3%p1%dm
+:  set t_Sb=[4%p1%dm
+:else
+:  set t_Co=8
+:  set t_Sf=[3%dm
+:  set t_Sb=[4%dm
+:endif
+:set mouse=a
+:endif
+
+:set colorcolumn=80
+
+" Overriddable rules
+if (expand("%:e") == "txt")
+  set textwidth=72
+endif
+
+if (expand("%:e") == "xml")
+  set textwidth=0
+  set nowrap
+endif
+if (expand("%:e") == "html")
+  set textwidth=0
+  set nowrap
+endif
+syntax enable
+
+" For Visual Studio Solution files
+if (expand("%:e") == "sln")
+  set textwidth=0
+  set nowrap
+endif
+
+" For Powershell scripts
+if (expand("%:e") == "ps1")
+  set textwidth=0
+  set nowrap
+endif
+
+" For UNIX Makefiles
+if (expand("%:t:r") == "Makefile")
+  set noexpandtab
+  set nowrap
+  set textwidth=0
+else
+  set expandtab
+endif
+
+" general rules
+set tabstop=4
+set shiftwidth=2
+set ruler
+set splitright
+set splitbelow
+set sm
+set incsearch
+set hlsearch
+set backspace=indent,eol,start
+set number
+set showmode
+set scrolloff=5
+
+:set cpo-=C
+:autocmd FileType c,cpp,h,m,java
+\   set formatoptions=croqn2l
+\   comments=sr:/*,mb:*,ex:*/,://
+\   ai
+\   cindent
+\   cinoptions=j1,(0,w1
+\   nowrap
+
+"imap { '{<Esc>o}<Esc>[A$i'
+
+highlight Comment ctermfg=red
+
+autocmd BufNewFile *.java           call JavaTempl()
+autocmd BufNewFile *.jj             call JavaCCTempl()
+if (expand("%:t:r") == "main")
+  autocmd BufNewFile main.[cm]      call CMainTempl()
+  autocmd BufNewFile main.cpp       call CMainTempl()
+else
+  autocmd BufNewFile *.m            call ObjCTempl()
+  autocmd BufNewFile *.c            call CTempl()
+  autocmd BufNewFile *.cpp          call CPPTempl()
+endif
+
+autocmd BufRead,BufNewFile *.vbproj,*.vbproj.user,*.csproj,*.csproj.user,*.vcproj call VSProj()
+autocmd BufRead,BufNewFile *.ps1    setlocal filetype=ps1
+autocmd BufRead,BufNewFile *.less   setlocal filetype=less
+autocmd BufRead,BufNewFile *.proto  setlocal filetype=proto
+
+" Sigh...we'll have to use a little bit of psychic wizardry to
+" figure out whether we're supposed to be creating an Objective-C
+" header file or a C++ header file
+if exists(expand("%:r").".m")
+  " There exists a file with the extension .m in the same directory
+  " as us, so let's assume that this is an Objective-C style header
+  autocmd BufNewFile [A-Z]*.h      call ObjCHeaderTempl()
+else
+  " No .m--assume C++
+  autocmd BufNewFile [A-Z]*.h      call CPPHeaderTempl()
+endif
+
+autocmd BufNewFile [a-z]*.h        call CHeaderTempl()
+autocmd BufNewFile *.hpp           call CPPHeaderTempl()
+autocmd BufNewFile Makefile        call MakefileTempl()
+autocmd BufNewFile build.xml       call BuildXMLTempl()
+"autocmd BufWritePre,FileWritePre *.java  ks|call LastMod()|'s
+
+function VSProj()
+  setlocal filetype=xml
+  set textwidth=0
+endfunction
+
+function LastMod()
+  if line("$") > 20
+    let lno = 20
+  else 
+    let lno = line("$")
+  endif
+  exe "1," . lno . "g/\/\/     Modified: /s/     Modified: .*/     Modified: " . strftime("%Y.%m.%d")
+endfunction
+
+function JSTempl()
+  set textwidth=0
+endfunction
+
+function CMainTempl()
+  set syntax=objc
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid)
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid)
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "int main (int argc, const char** argv) {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  return 0;")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function CPPHeaderTempl()
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid."_HEADER")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid."_HEADER")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "class ".l_classname." {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  public:")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    ".l_classname."();")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    ~".l_classname."();")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  protected:")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  private:")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "};")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function CHeaderTempl()
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid."_H")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid."_H")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function ObjCHeaderTempl()
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid."_H")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid."_H")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#include <Foundation/Foundation.h>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "@interface ".l_classname." : NSObject")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "{")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "@end")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function CTempl()
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#include \"".l_classname.".h\"")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function CPPTempl()
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid."_CPP")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid."_CPP")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#include \"".l_classname.".h\"")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, l_classname."::".l_classname." () {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, l_classname."::~".l_classname." () {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function ObjCTempl()
+  set syntax=objc
+  let l_finalname = ProperPath()
+  let l_reposname = RepositoryName()
+  let l_pkgname   = PackageName(expand("%:p:h"),"_")
+  let l_classname = expand("%:t:r")
+  let l_fileid    = toupper(l_reposname."_".l_pkgname."_".l_classname)
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "#ifndef ".l_fileid."_M")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#define ".l_fileid."_M")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#include \"".l_classname.".h\"")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "@implementation ".l_classname)
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "\- (id) init {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  [super init];")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  return self;")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "\- (void) dealloc {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  [super dealloc];")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "@end")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "#endif")
+endfunction
+
+function JavaCCTempl()
+  let l_finalname = ProperPath()
+  let l_dirname   = expand("%:p:h")
+  let l_classname = expand("%:t:r")
+  let l_pkgname   = PackageName(l_dirname,".")
+  if strlen(l_pkgname) > 0
+    let l_qname = l_pkgname.".".l_classname
+  else
+    let l_qname = l_classname
+  endif
+  call AppendCFileHeader(l_finalname)
+  let l_pos = line('$')
+  call append(l_pos, "options {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  STATIC = false;")
+  let l_pos = l_pos + 1
+  call append(l_pos, "}")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "PARSER_BEGIN(".l_classname.")")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  call AppendJavaOpening(l_pkgname, l_classname)
+  let l_pos = line('$')
+  call append(l_pos, "  /**")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   * Testing method for the parser. Reads the contents of the")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   * given file (or standard in if the filename is a dash) and")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   * attempts to match it to the grammar specified by this")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   * parser.")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   *")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   * @param args Command-line arguments; a single filename.")
+  let l_pos = l_pos + 1
+  call append(l_pos, "   */")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  public static void main (String[] args) throws Exception {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    // make sure we have exactly one argument")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    if (args.length != 1) {")
+  let l_pos = l_pos + 1
+  call append(l_pos, "      System.err.println(\"Usage: java ".l_qname." <filename>\");")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    }")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    // read from the given file, or stdin if <filename>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    // is a single dash")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    java.io.InputStream in = (args[0].equals(\"-\")) ? System.in :")
+  let l_pos = l_pos + 1
+  call append(l_pos, "                              new java.io.FileInputStream(args[0]);")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    // construct the parser and call the starting non-terminal")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    ".l_classname." parser = new ".l_classname."(in);")
+  let l_pos = l_pos + 1
+  call append(l_pos, "    ; // <-- replace this line with a call to your starting non-terminal -->")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  }")
+  call AppendJavaClosing()
+  let l_pos = line('$')
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "PARSER_END(".l_classname.")")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "/**")
+  let l_pos = l_pos + 1
+  call append(l_pos, " * Characters considered to be whitespace. They are ignored by the")
+  let l_pos = l_pos + 1
+  call append(l_pos, " * parser entirely.")
+  let l_pos = l_pos + 1
+  call append(l_pos, " */")
+  let l_pos = l_pos + 1
+  call append(l_pos, "SKIP : { \" \" | \"\\t\" | \"\\n\" | \"\\r\" | \"\\f\" }")
+endfunction
+
+function JavaTempl()
+  " get the full name, the directory name, and the file's base name
+  let l_fullname = expand("%:p")
+  let l_dirname  = expand("%:p:h")
+  let l_basename = expand("%:p:t")
+
+  " get the name of the class
+  let l_classname = strpart(l_basename, 0, strlen(l_basename) - 5)
+  let l_finalname = l_basename
+  if stridx(l_classname, "Exception") > -1
+    call append(0, "}")
+    call append(0, "  }")
+    call append(0, "    super(str, t);")
+    call append(0, "  public " . l_classname . " (String str, Throwable t) {")
+    call append(0, "   */")
+    call append(0, "   * @param t The cause.")
+    call append(0, "   * @param str The detail message.")
+    call append(0, "   *")
+    call append(0, "   * and cause.")
+    call append(0, "   * Constructs a new exception with the specified detail message")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super(t);")
+    call append(0, "  public " . l_classname . " (Throwable t) {")
+    call append(0, "   */")
+    call append(0, "   * @param t The cause.")
+    call append(0, "   *")
+    call append(0, "   * Constructs a new exception with the specified cause.")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super(str);")
+    call append(0, "  public " . l_classname . " (String str) {")
+    call append(0, "   */")
+    call append(0, "   * @param str The detail message.")
+    call append(0, "   *")
+    call append(0, "   * Constructs a new exception with the specified detail message.")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super();")
+    call append(0, "  public " . l_classname . " () {")
+    call append(0, "   */")
+    call append(0, "   * Constructs a new Exception.")
+    call append(0, "  /**")
+    call append(0, "public class " . l_classname . " extends Exception {")
+  elseif stridx(l_classname, "Error") > -1
+    call append(0, "}")
+    call append(0, "  }")
+    call append(0, "    super(str, t);")
+    call append(0, "  public " . l_classname . " (String str, Throwable t) {")
+    call append(0, "   */")
+    call append(0, "   * @param t The cause.")
+    call append(0, "   * @param str The detail message.")
+    call append(0, "   *")
+    call append(0, "   * and cause.")
+    call append(0, "   * Constructs a new error with the specified detail message")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super(t);")
+    call append(0, "  public " . l_classname . " (Throwable t) {")
+    call append(0, "   */")
+    call append(0, "   * @param t The cause.")
+    call append(0, "   *")
+    call append(0, "   * Constructs a new error with the specified cause.")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super(str);")
+    call append(0, "  public " . l_classname . " (String str) {")
+    call append(0, "   */")
+    call append(0, "   * @param str The detail message.")
+    call append(0, "   *")
+    call append(0, "   * Constructs a new error with the specified detail message.")
+    call append(0, "  /**")
+    call append(0, "")
+    call append(0, "  }")
+    call append(0, "    super();")
+    call append(0, "  public " . l_classname . " () {")
+    call append(0, "   */")
+    call append(0, "   * Constructs a new Error.")
+    call append(0, "  /**")
+    call append(0, "public class " . l_classname . " extends Error {")
+  elseif stridx(l_classname, "Abstract") == 0
+    " an abstract class
+    call append(0, "}")
+    call append(0, "  ")
+    call append(0, "public abstract class " . l_classname . " {")
+
+  elseif stridx(l_classname, "Test") == 0
+    " one of my many test classes
+    call append(0, "}")
+    call append(0, "  }")
+    call append(0, "    ")
+    call append(0, "  public static void main (String[] args) throws Exception {")
+    call append(0, "public class " . l_classname . " {")
+
+  else
+    " just a normal class--don't fill in any extra data
+    call append(0, "}")
+    call append(0, "  ")
+    call append(0, "public class " . l_classname . " {")
+  endif
+
+  call append(0, " */")
+  call append(0, " * ")
+  call append(0, "/**")
+  call append(0, "")
+
+  if stridx(l_dirname."/", "/src/") > -1
+    " we're in a /src directory...include this in the file name
+    let l_finalname = strpart(l_fullname, stridx(l_fullname, "/src/"))
+
+    if stridx(l_dirname, "/src/") > -1
+      " we're in a sub-directory of /src...that means we need a package
+      " line as well
+      let l_packagename = substitute(strpart(l_dirname, stridx(l_fullname, "/src/") + 5), "/", ".", "g")
+      call append(0, "package ".l_packagename.";")
+      call append(0, "")
+    endif
+  endif
+
+  "call append(0, "//")
+  "call append(0, "//     Modified: -")
+  "call append(0, "//     Created:  " . strftime("%Y.%m.%d"))
+  call append(0, "//")
+  call append(0, "//  " . l_finalname)
+  call append(0, "//")
+  exe "normal 8G$"
+endfunction
+
+" Appends a C-style header that states the pathname of the file to
+" the current buffer given the ProperPath of the file.
+function AppendCFileHeader(filename)
+  let pos = line('.')
+  call append(pos - 1, "//")
+  call append(pos, "//  ".a:filename)
+  call append(pos + 1, "//")
+endfunction
+
+" Appends (optionally) the Java package line and the class declaration.
+function AppendJavaOpening(pkgname, classname)
+  let pos = line('$')
+  if strlen(a:pkgname) > 0
+    call append(pos, "package ".a:pkgname.";")
+    let pos = pos + 1
+    call append(pos, "")
+    let pos = pos + 1
+  endif
+  call append(pos, "/**")
+  let pos = pos + 1
+  call append(pos, " *")
+  let pos = pos + 1
+  call append(pos, " */")
+  let pos = pos + 1
+  
+  " now for that fancy touch: if the class name starts with "Abstract",
+  " then assume the class is an abstract class and add the modifier as
+  " appropriate. If the class name ends with "Exception" or "Error",
+  " then it extends "Exception" or "Error", respectively.
+  let decl = "public "
+  let slen = strlen(a:classname)
+  if stridx(a:classname, "Abstract") == 0
+    let decl = decl."abstract "
+  endif
+  let decl = decl."class ".a:classname." "
+  if stridx(a:classname, "Exception") == (slen - 9)
+    let decl = decl."extends Exception "
+  elseif stridx(a:classname, "Error") == (slen - 5)
+    let decl = decl."extends Error "
+  endif
+  call append(pos, decl."{")
+endfunction
+
+" Appends the closing brace for a Java class.
+function AppendJavaClosing()
+  let pos = line('$')
+  call append(pos, "}")
+endfunction
+
+" Given a directory, returns the Java package that corresponds with
+" this directory structure, assuming the root of the source tree is a
+" directory called "/src" or "/include".
+function PackageName(dirname, subchar)
+  let l_index = stridx(a:dirname, "/src/")
+  if l_index > -1
+    " we are indeed in a sub-directory of a "/src" directory; that
+    " means we can find a package name
+    return substitute(strpart(a:dirname, l_index + 5), "/", a:subchar, "g")
+  else
+    " perhaps a sub-directory of "/include" instead?
+    let l_index = stridx(a:dirname, "/include/")
+    if l_index > -1
+      " we are indeed in a sub-directory of a "/include" directory; that
+      " means we can find a package name
+      return substitute(strpart(a:dirname, l_index + 9), "/", a:subchar, "g")
+    else
+      " we're either directly in a "/src" or "/include" directory or
+      " not in a "/src" or "/include" directory at all--either way,
+      " no package name can be deduced from the information at hand
+      return ""
+    endif
+  endif
+endfunction
+
+" Returns the proper path of this file. It is either merely the short
+" name of the file, or if this file resides in a src or include
+" directory, then everything from the last occurrence of "/src" or
+" "/include" in the full pathname to the end of the path.
+function ProperPath()
+  let l_fullname = expand("%:p")
+  let l_dirname  = expand("%:p:h")
+  let l_basename = expand("%:p:t")
+  
+  if stridx(l_dirname."/", "/src/") > -1
+    " we're in a /src directory
+    let l_finalname = strpart(l_fullname, stridx(l_fullname, "/src/"))
+  elseif stridx(l_dirname."/", "/include/") > -1
+    " we're in an /include directory
+    let l_finalname = strpart(l_fullname, stridx(l_fullname, "/include/"))
+  else
+    let l_finalname = l_basename
+  endif
+
+  return l_finalname
+endfunction
+
+" Returns the name of the repository that this file is a part of, or
+" the empty string if it is not part of a repository
+function RepositoryName()
+  let l_dirname  = expand("%:p:h")."/"
+  let l_repos    = ""
+  if stridx(l_dirname, "/src/") > -1
+    " we're in a /src directory
+    let l_backname = strpart(l_dirname, 0, stridx(l_dirname, "/src/"))
+    let l_repos = strpart(l_backname, strridx(l_backname, "/")+1)
+  elseif stridx(l_dirname, "/include/") > -1
+    " we're in an /include directory
+    let l_backname = strpart(l_dirname, 0, stridx(l_dirname, "/include/"))
+    let l_repos = strpart(l_backname, strridx(l_backname, "/")+1)
+  endif
+  return l_repos
+endfunction
+
+" Creates a Malefile based on the layout of the current directory.
+" This file should be created AFTER /src, /include, and /contrib have
+" been created.
+function MakefileTempl()
+  let l_repos = RepositoryName()
+  let l_pos = line('.')
+  call append(l_pos - 1, "\#")
+  if strlen(l_repos) > 0
+    call append(l_pos, "\# Makefile for ".l_repos)
+  else
+    call append(l_pos, "\# Makefile")
+  endif
+  let l_pos = l_pos + 1
+  call append(l_pos, "\#")
+  let l_pos = l_pos + 1
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "SRC_FILES=`find src -name *.cpp -or -name *.c -or -name *.m`")
+  let l_pos = l_pos + 1
+  call append(l_pos, "echo $SRC_FILES")
+endfunction
+
+" Creates a build.xml file based on the layout of the current directory.
+function BuildXMLTempl()
+  let l_parentdir = expand("%:p:h")
+  let l_repos = strpart(l_parentdir, strridx(l_parentdir, "/")+1)
+  let l_pos = line('.')
+  call append(l_pos - 1, "<project name=\"".l_repos."\" default=\"compile\" basedir=\".\">")
+  call append(l_pos, "")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  <!-- special file and directory names -->")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  <property name=\"app.name\" value=\"".l_repos."\"/>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  <property name=\"build.home\" value=\"build\"/>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  <property name=\"dist.home\" value=\"dist\"/>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "  <property name=\"src.home\" value=\"src\"/>")
+  let l_pos = l_pos + 1
+  call append(l_pos, "</project>")
+endfunction
+
+function ConvertJavaDocToCSharpDoc()
+  " split apart lines that start with /** with the rest of its contents
+  %s/^\(\s*\)\/\*\*\(..*\)$/\1\/\*\*\r\1 \* \2/
+
+  " split apart lines that end with */ with the rest of its contents
+  %s/^\(\s*\) \*\(.*\)\*\/$/\1 \*\2\r\1 \*\//
+
+  " convert JavaDocs of a certain style to C#
+  %s/^\(\s*\)\/\*\*/\1\/\/\/ <summary>/
+  %s/^\(\s*\) \* /\1\/\/\//
+  %s/^\(\s*\) \*\//\1\/\/\/ <\/summary>/
+  %s/^\(\s*\) \*/\1\/\/\//
+
+  " fix goofy spacing that may have resulted from the previous
+  " transforms
+  %s/^\(\s*\)\/\/\/\(\s*\)/\1\/\/\/ /
+
+  " convert links to see cref's
+  %s/{@link \([A-Za-z.]*\)}/<see cref="\1"\/>/g
+  %s/{@link \([A-Za-z.]*\)#\([A-Za-z()\,.]*\)}/<see cref="\1.\2"\/>/g
+endfunction
+

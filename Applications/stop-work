@@ -1,0 +1,12 @@
+#!/bin/sh
+
+quit Adium
+quit Twitter
+quit HipChat
+quit NetNewsWire
+quit Mail
+quit "Google Chrome"
+quit iCal
+
+killall python
+killall compass

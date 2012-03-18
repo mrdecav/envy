@@ -1,0 +1,16 @@
+#!/bin/sh
+open -a Adium
+open -a Twitter
+open -a HipChat
+open -a NetNewsWire
+open -a Mail
+open -a "Google Chrome"
+open -a iCal
+open -a Terminal
+
+(
+    cd /Users/dtanabe/Repositories/49-cibc/trunk.1/Client/Cibc.PowerPlay.Web
+    python -m SimpleHTTPServer &>/dev/null &
+)
+
+compass watch /Users/dtanabe/Repositories/49-cibc/trunk.1/Client/Cibc.PowerPlay.Web/Modules/Fx/View/blotter-module

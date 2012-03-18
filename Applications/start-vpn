@@ -1,0 +1,4 @@
+#!/bin/sh
+osascript -e 'tell application "System Events"
+    connect service "Lab49 VPN" in network preferences
+end tell'

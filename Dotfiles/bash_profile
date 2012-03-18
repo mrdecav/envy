@@ -1,0 +1,130 @@
+# bash_profile
+
+export PATH=$PATH:\
+$HOME/Applications:\
+$HOME/bin:\
+/Developer/Tools:\
+$REPOS_ROOT/$REPOS_LIBNAME/Applications:\
+$REPOS_ROOT/$REPOS_LIBNAME/Scripts
+
+export CLASSPATH=$CLASSPATH:.:build:/usr/local/lib/java
+export USRVIMRUNTIME="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/vim"
+export VIMINIT="set runtimepath=$USRVIMRUNTIME,\$VIMRUNTIME|source ${USRVIMRUNTIME}/vimrc"
+export LYNX_CFG="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/lynxrc"
+export LYNX_LSS="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/lynx/lynx.lss"
+export BC_ENV_ARGS="-l"
+export LC_CTYPE="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+
+export BLOCKSIZE=K;
+export EDITOR=vim;
+export PAGER=less;
+
+export HOST_SETTINGS_FILE=$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/.host-settings
+
+set -o vi
+
+case "$-" in 
+  *i*)
+    if [ -n "`w -n 2>&1 1> /dev/null`" ]; then w; else w -n; fi
+    stty discard ^O 2>/dev/null
+    ;;
+esac
+
+# Set up coloring for LS
+if [ `uname` = "Darwin" ]
+then
+    # Mac OS X-specific
+    alias ls='ls -FGw'
+    JAVA_HOME=/Library/Java/Home
+else
+    alias ls='ls --color -F'
+fi
+
+# Set up basic command aliases.
+alias    c='cd'
+alias  cdd='cd'
+alias    e='exit'
+alias    l='ls'
+alias   ll='ls -l'
+alias  lla='ls -lA'
+alias   la='ls -A'
+alias pluto='ssh dtanabe@pluto.pelebyte.net'
+alias service='set -f; __service'; __service () {
+    node "$REPOS_ROOT/$REPOS_LIBNAME/Support/services" "$@"
+    set +f;
+}
+
+# Map a number followed by a period or two periods to navigating up the
+# current hierarchy.
+CDCMD='cd '
+for i in {1..10}
+do
+    CDCMD="${CDCMD}../"
+    alias $i.="$CDCMD"
+    alias $i..="$CDCMD"
+done
+alias ..='cd ..'
+
+# Color prompt based on hostname.
+PROMPTCOLOR=`host-settings get prompt-color`
+#case `hostname -s` in
+#  greenbox)
+#    PROMPTCOLOR=32
+#    ;;
+
+#  pacific)
+#    PROMPTCOLOR=32
+#    ;;
+
+#  aquabox)
+#	PROMPTCOLOR=36
+#    ;;
+
+#  atlantic)
+#	PROMPTCOLOR=36
+#    ;;
+
+#  fulcrum)
+#    PROMPTCOLOR=36
+#    ;;
+
+#  yellowbox)
+#    PROMPTCOLOR=33
+#    ;;
+
+#  hawaii)
+#    PROMPTCOLOR=33
+#    ;;
+
+#  bigmac)
+#    PROMPTCOLOR="41;33;1"
+#    ;;
+
+#  whitebox)
+#    PROMPTCOLOR="47;30;1"
+#    ;;
+
+#  alubook)
+#    PROMPTCOLOR="47;30;1"
+#    ;;
+
+#  pluto)
+#    PROMPTCOLOR=36
+#    ;;
+#esac
+if [ "$PROMPTCOLOR" ]
+then
+    echo
+else
+    PROMPTCOLOR=0
+fi
+
+# set the prompt
+export PROMPTCOLOR
+export PS1="\[\033["$PROMPTCOLOR"m\][\!]\u@\h:\$(echo \044PWD)\\\$\[\033[0m\] "
+
+# figure out which history file to use
+export HISTFILESIZE=5000
+export HISTSIZE=5000
+export IGNOREEOF=999999

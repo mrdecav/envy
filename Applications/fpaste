@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pbpaste | while read FILE; do
+    cp "$FILE" .
+done

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+(for FILE in $*; do 
+    DIRNAME=`dirname $FILE`
+    DIRNAME="`cd \"$SCRIPT_DIRNAME\" 2>/dev/null && pwd || echo \"$SCRIPT_DIRNAME\"`"
+    echo $DIRNAME/$FILE
+done) | pbcopy

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ "`which md5`" ]
+then
+    HOSTCODE=`hostname -s | md5`
+else
+    HOSTCODE=`echo \`hostname -s\` | md5sum | awk "{ print \\\$1 }"`
+fi
+
+case $1 in
+  get)
+    PROPNAME=$2
+    HOSTPREFIX="$HOSTCODE.$PROPNAME"
+    cat $HOST_SETTINGS_FILE | awk "/$HOSTPREFIX/ { print \$2 }"
+    ;;
+  set)
+    PROPNAME=$2
+    PROPVAL=$3
+    HOSTPREFIX="$HOSTCODE.$PROPNAME"
+
+    if [ "`$0 get $PROPNAME`" ]
+    then
+        sed -i "" "s/$HOSTPREFIX .*/$HOSTPREFIX $PROPVAL/g" $HOST_SETTINGS_FILE
+    else
+        echo "$HOSTPREFIX $PROPVAL" >> $HOST_SETTINGS_FILE
+    fi
+    ;;
+
+  *)
+    echo "Usage:"
+    echo "  $0 get prop-name"
+    echo "  $0 set prop-name prop-value"
+    ;;
+esac
