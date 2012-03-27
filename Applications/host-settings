@@ -3,8 +3,12 @@
 if [ "`which md5`" ]
 then
     HOSTCODE=`hostname -s | md5`
-else
+elif [ "`which md5sum`" ]
+then
     HOSTCODE=`echo \`hostname -s\` | md5sum | awk "{ print \\\$1 }"`
+else
+    echo "No suitable hashing app (md5/md5sum) found!" >&2
+    exit 1
 fi
 
 case $1 in

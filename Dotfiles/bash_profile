@@ -3,7 +3,6 @@
 export PATH=$PATH:\
 $HOME/Applications:\
 $HOME/bin:\
-/Developer/Tools:\
 $REPOS_ROOT/$REPOS_LIBNAME/Applications:\
 $REPOS_ROOT/$REPOS_LIBNAME/Scripts
 
@@ -66,11 +65,9 @@ done
 alias ..='cd ..'
 
 # Color prompt based on hostname.
-PROMPTCOLOR=`host-settings get prompt-color`
-if [ "$PROMPTCOLOR" ]
+PROMPTCOLOR=`host-settings get prompt-color 2>/dev/null`
+if [ -z "$PROMPTCOLOR" ]
 then
-    echo ''
-else
     PROMPTCOLOR=0
 fi
 
