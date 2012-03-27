@@ -49,7 +49,6 @@ alias    l='ls'
 alias   ll='ls -l'
 alias  lla='ls -lA'
 alias   la='ls -A'
-alias pluto='ssh dtanabe@pluto.pelebyte.net'
 alias service='set -f; __service'; __service () {
     node "$REPOS_ROOT/$REPOS_LIBNAME/Support/services" "$@"
     set +f;
@@ -68,54 +67,9 @@ alias ..='cd ..'
 
 # Color prompt based on hostname.
 PROMPTCOLOR=`host-settings get prompt-color`
-#case `hostname -s` in
-#  greenbox)
-#    PROMPTCOLOR=32
-#    ;;
-
-#  pacific)
-#    PROMPTCOLOR=32
-#    ;;
-
-#  aquabox)
-#	PROMPTCOLOR=36
-#    ;;
-
-#  atlantic)
-#	PROMPTCOLOR=36
-#    ;;
-
-#  fulcrum)
-#    PROMPTCOLOR=36
-#    ;;
-
-#  yellowbox)
-#    PROMPTCOLOR=33
-#    ;;
-
-#  hawaii)
-#    PROMPTCOLOR=33
-#    ;;
-
-#  bigmac)
-#    PROMPTCOLOR="41;33;1"
-#    ;;
-
-#  whitebox)
-#    PROMPTCOLOR="47;30;1"
-#    ;;
-
-#  alubook)
-#    PROMPTCOLOR="47;30;1"
-#    ;;
-
-#  pluto)
-#    PROMPTCOLOR=36
-#    ;;
-#esac
 if [ "$PROMPTCOLOR" ]
 then
-    echo
+    echo ''
 else
     PROMPTCOLOR=0
 fi

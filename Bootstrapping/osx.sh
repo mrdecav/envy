@@ -26,8 +26,8 @@ fi
 echo "Creating $REPOS_ROOT..."
 mkdir $REPOS_ROOT 2> /dev/null
 
-echo "Checking out the repository..."
-svn checkout http://internal.pelebyte.net/svn/envy $REPOS_ROOT/$REPOS_LIBNAME
+#echo "Checking out the repository..."
+#git clone .../envy $REPOS_ROOT/$REPOS_LIBNAME
 
 echo "Creating ~/.bash_profile ..."
 echo "export REPOS_ROOT=$REPOS_ROOT" > ~/.bash_profile
