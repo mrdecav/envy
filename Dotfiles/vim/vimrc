@@ -47,6 +47,11 @@ if (expand("%:e") == "html")
 endif
 syntax enable
 
+" For Handlebars, Mustache files
+au BufNewFile,BufRead *.hbs set filetype=html
+au BufNewFile,BufRead *.handlebars set filetype=html
+au BufNewFile,BufRead *.mustache set filetype=html
+
 " For Visual Studio Solution files
 if (expand("%:e") == "sln")
   set textwidth=0
