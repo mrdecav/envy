@@ -56,5 +56,6 @@ then
   defaults write com.apple.dock orientation left
   defaults write com.apple.dock pinning end
   defaults write com.apple.dock expose-animation-duration -float 0.1
+  defaults write com.apple.Dock autohide-delay -float 0
   killall Dock
 fi
