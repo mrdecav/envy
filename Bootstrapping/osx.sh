@@ -57,5 +57,6 @@ then
   defaults write com.apple.dock pinning end
   defaults write com.apple.dock expose-animation-duration -float 0.1
   defaults write com.apple.Dock autohide-delay -float 0
+  defaults write com.apple.Safari NSUserKeyEquivalents -dict-add Back "\U232b"
   killall Dock
 fi
