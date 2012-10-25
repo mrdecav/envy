@@ -1,6 +1,9 @@
 # bash_profile
 
-export PATH=$PATH:\
+# Build a nice PATH
+export PATH=\
+/opt/local/bin:/opt/local/sbin:\
+$PATH:\
 $HOME/Applications:\
 $HOME/bin:\
 $REPOS_ROOT/$REPOS_LIBNAME/Applications:\

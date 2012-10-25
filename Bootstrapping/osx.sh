@@ -9,18 +9,24 @@ fi
 
 REPOS_LIBNAME=pb-envy
 
+WRITE_PROFILE="YES"
 if [ -e ~/.bash_profile ]
 then
-  echo "A ~/.bash_profile already exists. Do you want to overwrite it? (Y/N)"
+  echo "A ~/.bash_profile already exists. Do you want to overwrite it? (Y/N/Skip)"
   read response
 
-  if [[ ($response != "y") && ($response != "Y") ]]
-  then
+  case $reponse in
+  yY)
+    rm ~/.bash_profile
+    ;;
+  nN)
     echo "Please rename or remove ~/.bash_profile."
     exit 1
-  fi
-
-  rm ~/.bash_profile
+    ;;
+  *)
+    WRITE_PROFILE=""
+    ;;
+  esac
 fi
 
 echo "Creating $REPOS_ROOT..."
@@ -29,11 +35,14 @@ mkdir $REPOS_ROOT 2> /dev/null
 #echo "Checking out the repository..."
 #git clone .../envy $REPOS_ROOT/$REPOS_LIBNAME
 
-echo "Creating ~/.bash_profile ..."
-echo "export REPOS_ROOT=$REPOS_ROOT" > ~/.bash_profile
-echo "export REPOS_LIBNAME=$REPOS_LIBNAME" >> ~/.bash_profile
-echo "export PROFILE=\"$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/bash_profile\"" >> ~/.bash_profile
-echo ". \$PROFILE" >> ~/.bash_profile
+if [ $WRITE_PROFILE ]
+then
+  echo "Creating ~/.bash_profile ..."
+  echo "export REPOS_ROOT=$REPOS_ROOT" > ~/.bash_profile
+  echo "export REPOS_LIBNAME=$REPOS_LIBNAME" >> ~/.bash_profile
+  echo "export PROFILE=\"$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/bash_profile\"" >> ~/.bash_profile
+  echo ". \$PROFILE" >> ~/.bash_profile
+fi
 
 if [ `uname -s` = "Darwin" ]
 then
@@ -59,4 +68,11 @@ then
   defaults write com.apple.Dock autohide-delay -float 0
   defaults write com.apple.Safari NSUserKeyEquivalents -dict-add Back "\U232b"
   killall Dock
+
+  echo "Setting up Chrome preferences..."
+
+  CHROME_STYLESHEET="$HOME/Library/Application Support/Google/Chrome/Default/User StyleSheets/Custom.css"
+  echo "$CHROME_STYLESHEET"
+  rm "$CHROME_STYLESHEET"
+  ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/chrome/Custom.css" "$CHROME_STYLESHEET"
 fi
