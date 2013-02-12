@@ -2,12 +2,13 @@
 
 # Build a nice PATH
 export PATH=\
-/opt/local/bin:/opt/local/sbin:\
 $PATH:\
+/opt/local/bin:/opt/local/sbin:\
 $HOME/Applications:\
 $HOME/bin:\
 $REPOS_ROOT/$REPOS_LIBNAME/Applications:\
-$REPOS_ROOT/$REPOS_LIBNAME/Scripts
+$REPOS_ROOT/$REPOS_LIBNAME/Scripts:\
+/usr/local/mongodb/bin
 
 export CLASSPATH=$CLASSPATH:.:build:/usr/local/lib/java
 export USRVIMRUNTIME="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/vim"
@@ -83,3 +84,5 @@ export PS1="\[\033["$PROMPTCOLOR"m\][\!]\u@\h:\$(echo \044PWD)\\\$\[\033[0m\] "
 export HISTFILESIZE=5000
 export HISTSIZE=5000
 export IGNOREEOF=999999
+
+source "${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git/git-completion.bash"
