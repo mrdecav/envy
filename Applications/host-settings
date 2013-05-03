@@ -1,11 +1,16 @@
 #!/bin/bash
 
+if [ -z "$HOSTNAME" ]
+then
+   HOSTNAME=`hostname -s`
+fi
+
 if [ "`which md5`" ]
 then
-    HOSTCODE=`hostname -s | md5`
+    HOSTCODE=`echo \$HOSTNAME | md5`
 elif [ "`which md5sum`" ]
 then
-    HOSTCODE=`echo \`hostname -s\` | md5sum | awk "{ print \\\$1 }"`
+    HOSTCODE=`echo \$HOSTNAME | md5sum | awk "{ print \\\$1 }"`
 else
     echo "No suitable hashing app (md5/md5sum) found!" >&2
     exit 1

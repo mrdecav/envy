@@ -26,6 +26,7 @@ export PAGER=less
 export LESS=-R
 
 export HOST_SETTINGS_FILE=$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/.host-settings
+export NODE_PATH="${REPOS_ROOT}/49-landscape/packages"
 
 set -o vi
 
@@ -69,6 +70,7 @@ do
     alias $i..="$CDCMD"
 done
 alias ..='cd ..'
+alias find.='find .'
 
 # Color prompt based on hostname.
 PROMPTCOLOR=`host-settings get prompt-color 2>/dev/null`
@@ -79,11 +81,66 @@ fi
 
 # set the prompt
 export PROMPTCOLOR
-export PS1="\[\033["$PROMPTCOLOR"m\][\!]\u@\h:\$(echo \044PWD)\\\$\[\033[0m\] "
+export PS1="\[\e[37m\][\!]"\
+"\[\e[$PROMPTCOLOR;4m\]"\
+"\$(echo \044USER)@\$(echo \044HOSTNAME)"\
+"\[\e[0m\e[37m\]:"\
+"\[\e[32m\]\$(__vcsinfo)\[\e[37m\]"\
+"\$(echo \044{PWD#$REPOS_ROOT/})\[\e[0m\]\$ "
+
+#export PS1="\$(__prompt_fn \!)"
 
 # figure out which history file to use
 export HISTFILESIZE=5000
 export HISTSIZE=5000
 export IGNOREEOF=999999
 
+# compute current version control system info for the working directory
+function __vcsinfo {
+  SVNINFO=$(svn info 2>/dev/null)
+  GITBRANCH=`git_current_branch`
+  REPOS_PART=${PWD#$REPOS_ROOT/}
+
+  if [ "$PWD" == "$REPOS_PART" ]; then
+    echo -n
+  elif [ -z "$SVNINFO" ]; then
+    if [ -z "$GITBRANCH" ]; then
+      echo -n
+    else
+      echo -n "[git:$GITBRANCH]"
+    fi
+  else
+    echo -n "[svn]"
+  fi
+}
+
+# Compute a prompt from the current directory
+function __prompt_fn {
+  SVNINFO=$(svn info 2>/dev/null)
+  GITBRANCH=`git_current_branch`
+
+  REPOS_PART=${PWD#$REPOS_ROOT/}
+
+  PREFIX="\033[37m["$1"]\033["$PROMPTCOLOR";4m"$USER"@"$HOSTNAME"\033[0m\033[37m:"
+  SUFFIX="\$\033[0m"
+
+  if [ "$PWD" == "$REPOS_PART" ]; then
+    echo -n ${PREFIX}${PWD}${SUFFIX}" "
+  elif [ -z "$SVNINFO" ]; then
+    if [ -z "$GITBRANCH" ]; then
+      echo -n ${PREFIX}${REPOS_PART}${SUFFIX}" "
+    else
+      echo -n ${PREFIX}"\033[32m[\033[32;4;1mgit\033[0m\033[32m:"${GITBRANCH}"]\033[37m"${REPOS_PART}${SUFFIX}" "
+    fi
+  else
+    echo -n ${PREFIX}"\033[32m[\033[32;4;1msvn\033[0m\033[32m]\033[37m"${REPOS_PART}${SUFFIX}" "
+  fi
+}
+
+function git_current_branch {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}
+
 source "${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git/git-completion.bash"
+# git config --global core.excludesfile $REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/git/gitignore
