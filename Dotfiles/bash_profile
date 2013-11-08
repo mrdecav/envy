@@ -2,6 +2,7 @@
 
 # Build a nice PATH
 export PATH=\
+/usr/local/bin:\
 $PATH:\
 /opt/local/bin:/opt/local/sbin:\
 $HOME/Applications:\
@@ -26,7 +27,6 @@ export PAGER=less
 export LESS=-R
 
 export HOST_SETTINGS_FILE=$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/.host-settings
-export NODE_PATH="${REPOS_ROOT}/49-landscape/packages"
 
 set -o vi
 
@@ -82,7 +82,7 @@ fi
 # set the prompt
 export PROMPTCOLOR
 export PS1="\[\e[37m\][\!]"\
-"\[\e[$PROMPTCOLOR;4m\]"\
+"\[\e[${PROMPTCOLOR};4m\]"\
 "\$(echo \044USER)@\$(echo \044HOSTNAME)"\
 "\[\e[0m\e[37m\]:"\
 "\[\e[32m\]\$(__vcsinfo)\[\e[37m\]"\
