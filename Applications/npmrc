@@ -1,0 +1,75 @@
+#!/bin/sh
+
+NPMRC_STORE="${HOME}/.npmrcs";
+NPMRC="${HOME}/.npmrc";
+
+if [ "${1}" == "--help" -o "${1}" == "-h" ]; then
+  echo "npmrcs"
+  echo ""
+  echo "  Switch between different .npmrc files with ease and grace."
+  echo ""
+  echo "Usage: npmrc [name]"
+  echo ""
+  echo "Example:"
+  echo "  Creating and activating a new .npmrc called 'work':"
+  echo "  > touch ~/.npmrcs/work"
+  echo "  > npmrcs work"
+  exit 1
+fi
+
+# init ~/.npmrc & ~/npmrc/default
+if [ ! -d "$NPMRC_STORE" ]; then
+  echo "Initialising npmrcs..."
+  echo "Creating ${NPMRC_STORE}"
+  mkdir ${NPMRC_STORE}
+
+  # create default npmrc if it doesn't exist
+  if [ ! -e "${NPMRC}" ]; then
+    touch ${NPMRC_STORE}/default
+  else
+    # make existing config 'default'
+    echo "Making ${NPMRC} the default npmrc file"
+    mv ${NPMRC} ${NPMRC_STORE}/default
+  fi;
+
+  # use the config we just created
+  $0 default
+  exit $?
+fi
+
+if [ "x${1}" = "x" ]; then
+  echo "Available npmrcs:";
+  echo;
+  find "${NPMRC_STORE}" -type f | while read FILE; do
+    if [ "$(readlink ${NPMRC})" = "${FILE}" ]; then
+      echo "* $(basename ${FILE})";
+    else
+      echo "  $(basename ${FILE})";
+    fi;
+  done;
+
+  exit 0;
+fi;
+
+if [ ! -e "${NPMRC_STORE}/${1}" ]; then
+  echo "Couldn't find npmrc file '${1}', looked in ${NPMRC_STORE}/${1}";
+  exit 1;
+fi;
+
+if [ -e "${NPMRC}" ]; then
+  if [ ! -h "${NPMRC}" ]; then
+    echo "Current .npmrc (${NPMRC}) is not a symlink. You may want to copy it into ${NPMRC_STORE}";
+    exit 1;
+  fi;
+
+  if [ "$(readlink ${NPMRC})" = "${NPMRC_STORE}/${1}" ]; then
+    echo "Current .npmrc (${NPMRC}) is already '${1}' (${NPMRC_STORE}/${1})";
+    exit 1;
+  fi;
+
+  echo "Removing old .npmrc ($(readlink ${NPMRC}))";
+  rm "${NPMRC}" || exit 1;
+fi;
+
+echo "Activating .npmrc '${1}'";
+ln -s "${NPMRC_STORE}/${1}" "${NPMRC}" || exit 1;

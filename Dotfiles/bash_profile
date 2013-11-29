@@ -5,13 +5,20 @@ git_etc="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git"
 # Build a nice PATH
 export PATH=\
 /usr/local/bin:\
+/usr/local/apache-maven/bin:\
 $PATH:\
-/opt/local/bin:/opt/local/sbin:\
+/opt/local/bin:\
+/opt/local/sbin:\
 $HOME/Applications:\
 $HOME/bin:\
 $REPOS_ROOT/$REPOS_LIBNAME/Applications:\
 $REPOS_ROOT/$REPOS_LIBNAME/Scripts:\
-/usr/local/mongodb/bin
+/usr/local/mongodb/bin:\
+/usr/local/play:\
+/usr/local/scala/bin:\
+/usr/local/neo4j/bin:\
+node_modules/.bin:\
+$(npm config get prefix)/bin
 
 export CLASSPATH=$CLASSPATH:.:build:/usr/local/lib/java
 export USRVIMRUNTIME="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/vim"
@@ -44,7 +51,8 @@ if [ `uname` = "Darwin" ]
 then
     # Mac OS X-specific
     alias ls='ls -FGw'
-    JAVA_HOME=/Library/Java/Home
+    #JAVA_HOME=/Library/Java/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home
 else
     alias ls='ls --color -F'
 fi
