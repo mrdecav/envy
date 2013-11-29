@@ -1,5 +1,7 @@
 # bash_profile
 
+git_etc="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git"
+
 # Build a nice PATH
 export PATH=\
 /usr/local/bin:\
@@ -121,20 +123,33 @@ function __prompt_fn {
 
   REPOS_PART=${PWD#$REPOS_ROOT/}
 
-  PREFIX="\033[37m["$1"]\033["$PROMPTCOLOR";4m"$USER"@"$HOSTNAME"\033[0m\033[37m:"
-  SUFFIX="\$\033[0m"
+  prefix="\033[37m["$1"]\033["$PROMPTCOLOR";4m"$USER"@"$HOSTNAME"\033[0m\033[37m:"
+  suffix="\$\033[0m"
 
   if [ "$PWD" == "$REPOS_PART" ]; then
-    echo -n ${PREFIX}${PWD}${SUFFIX}" "
+    echo -n ${prefix}${PWD}${suffix}" "
   elif [ -z "$SVNINFO" ]; then
     if [ -z "$GITBRANCH" ]; then
-      echo -n ${PREFIX}${REPOS_PART}${SUFFIX}" "
+      echo -n ${prefix}${REPOS_PART}${suffix}" "
     else
-      echo -n ${PREFIX}"\033[32m[\033[32;4;1mgit\033[0m\033[32m:"${GITBRANCH}"]\033[37m"${REPOS_PART}${SUFFIX}" "
+      echo -n ${prefix}"\033[32m[\033[32;4;1mgit\033[0m\033[32m:"${GITBRANCH}"]\033[37m"${REPOS_PART}${suffix}" "
     fi
   else
-    echo -n ${PREFIX}"\033[32m[\033[32;4;1msvn\033[0m\033[32m]\033[37m"${REPOS_PART}${SUFFIX}" "
+    echo -n ${prefix}"\033[32m[\033[32;4;1msvn\033[0m\033[32m]\033[37m"${REPOS_PART}${suffix}" "
   fi
+}
+
+function __git_remote_host {
+  email_host=`git config user.email | awk 'BEGIN { FS="@"; } { print $2 }'`
+
+  repos_url=`git config remote.origin.url`
+  repos_url_no_protocol=${repos_url#*//}
+  repos_url_no_user=${repos_url_no_protocol#*@}
+  repos_url_no_path=${repos_url_no_user%%/*}
+  repos_hostname=${repos_url_no_path%%:*}
+
+  echo $repos_hostname
+  echo $email_host
 }
 
 function git_current_branch {
@@ -142,5 +157,6 @@ function git_current_branch {
   echo ${ref#refs/heads/}
 }
 
-source "${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git/git-completion.bash"
+source "${git_etc}/git-completion.bash"
+
 # git config --global core.excludesfile $REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/git/gitignore
