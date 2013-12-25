@@ -72,7 +72,7 @@ fi
 if [ `uname -s` = "Darwin" ]
 then
   echo "Setting up Library aliases to Dropbox..."
-  for APP in LicenseKeeper OmniGraffle
+  for APP in OmniGraffle
   do
     SRCDIR="$HOME/Dropbox/Libraries/$APP"
     TARGETDIR="$HOME/Library/Application Support/$APP"
@@ -95,11 +95,12 @@ then
   defaults write com.google.Chrome.plist AppleEnableSwipeNavigateWithScrolls -bool FALSE
   killall Dock
 
-  echo "Setting up Chrome preferences..."
+  #echo "Setting up Chrome preferences..."
 
-  CHROME_STYLESHEET="$HOME/Library/Application Support/Google/Chrome/Default/User StyleSheets/Custom.css"
-  echo "$CHROME_STYLESHEET"
-  rm "$CHROME_STYLESHEET"
-  ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/chrome/Custom.css" "$CHROME_STYLESHEET"
+  #CHROME_STYLESHEET="$HOME/Library/Application Support/Google/Chrome/Default/User StyleSheets/Custom.css"
+  #echo "$CHROME_STYLESHEET"
+  #rm "$CHROME_STYLESHEET"
+  #ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/chrome/Custom.css" "$CHROME_STYLESHEET"
+  ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/subl" "$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 fi
 
