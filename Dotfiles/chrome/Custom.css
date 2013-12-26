@@ -11,7 +11,7 @@
 /**********************************************/
 /* chrome-devtools://devtools/devTools.css */
 #-webkit-web-inspector {
-  /* @-webkit-keyframes webkit-error-level { 
+  /* @-webkit-keyframes webkit-error-level {
     0%   { color: #f77; !important }
     50%  { color: #f00; !important }
     100% { color: #f77; !important }
@@ -47,7 +47,9 @@
     font-size: 14px !important; }
   #-webkit-web-inspector #main {
     background-color: rgba(0, 0, 0, 0.85) !important;
-    color: #f1f1f1 !important; }
+    color: #f1f1f1; }
+    #-webkit-web-inspector #main .tabbed-pane-header-tab.selected {
+      color: black !important; }
     #-webkit-web-inspector #main .pane > .title {
       background: black !important;
       color: white !important;
@@ -78,15 +80,18 @@
       background: none !important;
       opacity: 0.8; }
     #-webkit-web-inspector #main .pane > .body .info {
-      color: #999!important; }
+      color: #999999 !important; }
     #-webkit-web-inspector #main .outline-disclosure > ol {
-      color: white!important; }
+      color: white !important; }
     #-webkit-web-inspector #main .text-editor-lines {
       background-color: transparent !important;
       border-right: none !important; }
   #-webkit-web-inspector #toolbar {
     border-top: none !important;
-    padding: 0px !important; }
+    padding: 0px !important;
+    background: black !important; }
+    #-webkit-web-inspector #toolbar .toolbar-label {
+      color: white !important; }
   #-webkit-web-inspector .sidebar {
     background-color: rgba(0, 0, 0, 0.85) !important; }
   #-webkit-web-inspector #console-messages {
@@ -268,3 +273,11 @@
   #-webkit-web-inspector #network-views .webkit-javascript-regexp,
   #-webkit-web-inspector #script-resource-views .webkit-javascript-regexp {
     color: #e9c062 !important; }
+
+.styles-section .selector-matches {
+  color: white !important;
+  font-weight: bold;
+  text-decoration: underline; }
+
+.sidebar-tabbed-pane .tabbed-pane-header {
+  background: black !important; }

@@ -52,7 +52,7 @@ then
     # Mac OS X-specific
     alias ls='ls -FGw'
     #JAVA_HOME=/Library/Java/Home
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home
 else
     alias ls='ls --color -F'
 fi
