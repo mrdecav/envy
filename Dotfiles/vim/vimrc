@@ -567,7 +567,18 @@ function JavaTempl()
   call append(0, "/**")
   call append(0, "")
 
-  if stridx(l_dirname."/", "/src/") > -1
+  if stridx(l_dirname."/", "/src/main/java/") > -1
+    " we're in a /src directory...include this in the file name
+    let l_finalname = strpart(l_fullname, stridx(l_fullname, "/src/main/java/"))
+
+    if stridx(l_dirname, "/src/main/java/") > -1
+      " we're in a sub-directory of /src...that means we need a package
+      " line as well
+      let l_packagename = substitute(strpart(l_dirname, stridx(l_fullname, "/src/main/java/") + 5), "/", ".", "g")
+      call append(0, "package ".l_packagename.";")
+      call append(0, "")
+    endif
+  elseif stridx(l_dirname."/", "/src/") > -1
     " we're in a /src directory...include this in the file name
     let l_finalname = strpart(l_fullname, stridx(l_fullname, "/src/"))
 
