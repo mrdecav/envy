@@ -53,6 +53,7 @@ then
     alias ls='ls -FGw'
     #JAVA_HOME=/Library/Java/Home
     export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home
+    export GROOVY_HOME=/usr/local/opt/groovy/libexec
 else
     alias ls='ls --color -F'
 fi
