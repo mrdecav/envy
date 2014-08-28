@@ -105,9 +105,24 @@ export HISTFILESIZE=5000
 export HISTSIZE=5000
 export IGNOREEOF=999999
 
+# figure out which VCS is being used for the working directory
+function __vcswhich {
+  if [ "$(git status 2>/dev/null)" ]
+  then
+    echo "git"
+  elif [ "$(svn info 2>/dev/null)" ]
+  then
+    echo "svn"
+  elif [ "$(hg status 2>/dev/null)" ]
+  then
+    echo "hg"
+  fi
+}
+
 # compute current version control system info for the working directory
 function __vcsinfo {
   SVNINFO=$(svn info 2>/dev/null)
+  HGINFO=$(hg info 2>/dev/null)
   GITBRANCH=`git_current_branch`
   REPOS_PART=${PWD#$REPOS_ROOT/}
 

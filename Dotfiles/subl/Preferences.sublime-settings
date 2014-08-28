@@ -4,7 +4,7 @@
 	"find_selected_text": false,
 	"ignored_packages":
 	[
-	"Vintage"
+		"Vintage"
 	],
 	"show_encoding": true,
 	"show_line_endings": true,
