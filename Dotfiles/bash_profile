@@ -1,6 +1,9 @@
 # bash_profile
 
+__dirname="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles"
 git_etc="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git"
+
+source "${__dirname}/functions.sh"
 
 # Build a nice PATH
 export PATH=\
@@ -51,8 +54,8 @@ if [ `uname` = "Darwin" ]
 then
     # Mac OS X-specific
     alias ls='ls -FGw'
-    #JAVA_HOME=/Library/Java/Home
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home
+
+    export JAVA_HOME="$(find_java)/Contents/Home"
     export GROOVY_HOME=/usr/local/opt/groovy/libexec
 else
     alias ls='ls --color -F'
