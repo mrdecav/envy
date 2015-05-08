@@ -38,6 +38,7 @@ if [ "$#" -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   exit 1
 fi
 
+eval "$GET_ID"
 { eval "$GET_ID" ; } | ssh ${1%:} "umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys" || exit 1
 
 cat <<EOF

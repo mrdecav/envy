@@ -2,9 +2,9 @@
 	"color_scheme": "Packages/User/DKT.tmTheme",
 	"ensure_newline_at_eof_on_save": true,
 	"find_selected_text": false,
+	"font_size": 14,
 	"ignored_packages":
 	[
-		"Vintage"
 	],
 	"show_encoding": true,
 	"show_line_endings": true,
