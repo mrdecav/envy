@@ -3,7 +3,7 @@
 command! JSHint call s:JSHint()
 
 function s:JSHint()
-    :!jshint % --show-non-errors
+    :!eslint %
 endfunction
 
 autocmd BufWritePost *.js call s:JSHint()

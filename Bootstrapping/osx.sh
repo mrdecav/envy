@@ -86,6 +86,9 @@ then
     ln -s "$SRCDIR" "$TARGETDIR"
   done
 
+  echo "Downloading dependencies..."
+  brew cask install adium atom hipchat scroll-reverser sourcetree
+
   echo "Setting standard preferences..."
   defaults write com.apple.dock orientation left
   defaults write com.apple.dock pinning end
@@ -93,6 +96,8 @@ then
   defaults write com.apple.Dock autohide-delay -float 0
   defaults write com.apple.Safari NSUserKeyEquivalents -dict-add Back "\U232b"
   defaults write com.google.Chrome.plist AppleEnableSwipeNavigateWithScrolls -bool FALSE
+  defaults write com.pilotmoon.scroll-reverser ReverseTrackpad 0
+  defaults write com.pilotmoon.scroll-reverser ReverseX 0
   killall Dock
 
   #echo "Setting up Chrome preferences..."

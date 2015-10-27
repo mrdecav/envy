@@ -3,7 +3,7 @@
 
 [user]
 	name = Davin K. Tanabe
-	email = gitter@pelebyte.net
+	email = Davin.Tanabe@lab49.com
 
 [difftool "Kaleidoscope"]
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
@@ -26,3 +26,11 @@
 	rebase = true
 [branch]
 	autosetuprebase = always
+[core]
+	excludesfile = /Users/dtanabe/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /opt/homebrew-cask/Caskroom/sourcetree/2.0.5.2/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
