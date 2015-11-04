@@ -64,14 +64,7 @@ if (expand("%:e") == "ps1")
   set nowrap
 endif
 
-" For UNIX Makefiles
-if (expand("%:t:r") == "Makefile")
-  set noexpandtab
-  set nowrap
-  set textwidth=0
-else
-  set expandtab
-endif
+set expandtab
 
 " general rules
 set tabstop=4
