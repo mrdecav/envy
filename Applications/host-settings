@@ -5,10 +5,10 @@ then
    HOSTNAME=`hostname -s`
 fi
 
-if [ "`which md5`" ]
+if [ "`which md5 2>/dev/null`" ]
 then
     HOSTCODE=`echo \$HOSTNAME | md5`
-elif [ "`which md5sum`" ]
+elif [ "`which md5sum 2>/dev/null`" ]
 then
     HOSTCODE=`echo \$HOSTNAME | md5sum | awk "{ print \\\$1 }"`
 else
@@ -29,7 +29,7 @@ case $1 in
 
     if [ "`$0 get $PROPNAME`" ]
     then
-        sed -i "" "s/$HOSTPREFIX .*/$HOSTPREFIX $PROPVAL/g" $HOST_SETTINGS_FILE
+        sed -i "" -e "s/$HOSTPREFIX .*/$HOSTPREFIX $PROPVAL/g" $HOST_SETTINGS_FILE
     else
         echo "$HOSTPREFIX $PROPVAL" >> $HOST_SETTINGS_FILE
     fi
