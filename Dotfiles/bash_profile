@@ -99,7 +99,7 @@ export PS1="\[\e[37m\][\!]"\
 "\[\e[${PROMPTCOLOR};4m\]"\
 "\$(echo \044USER)@\$(echo \044HOSTNAME)"\
 "\[\e[0m\e[37m\]:"\
-"\[\e[32m\]\$(__vcsinfo)\[\e[37m\]"\
+"\[\e[32m\]\$(__vcsinfo 2>/dev/null)\[\e[37m\]"\
 "\$(echo \044{PWD#$REPOS_ROOT/})\[\e[0m\]\$ "
 
 #export PS1="\$(__prompt_fn \!)"
