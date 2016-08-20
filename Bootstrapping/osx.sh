@@ -8,6 +8,7 @@ else
 fi
 
 REPOS_LIBNAME=pb-envy
+PROFILE_PATH="${REPOS_ROOT}/${REPOS_LIBNAME}"
 
 WRITE_PROFILE="YES"
 WRITE_GITIGNORE="YES"
@@ -52,9 +53,6 @@ fi
 echo "Creating $REPOS_ROOT..."
 mkdir $REPOS_ROOT 2> /dev/null
 
-#echo "Checking out the repository..."
-#git clone .../envy $REPOS_ROOT/$REPOS_LIBNAME
-
 if [ $WRITE_PROFILE ]
 then
   echo "Creating ~/.bash_profile ..."
@@ -66,28 +64,15 @@ fi
 
 if [ $WRITE_GITIGNORE ]
 then
-  ln -s "${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git/gitconfig" "${HOME}/.gitconfig"
+  ln -s "${PROFILE_PATH}/Dotfiles/git/gitconfig" "${HOME}/.gitconfig"
 fi
 
 if [ `uname -s` = "Darwin" ]
 then
-  echo "Setting up Library aliases to Dropbox..."
-  for APP in OmniGraffle
-  do
-    SRCDIR="$HOME/Dropbox/Libraries/$APP"
-    TARGETDIR="$HOME/Library/Application Support/$APP"
-
-    if [ -e "$TARGETDIR" ]
-    then
-      rm -r "$TARGETDIR"
-    fi
-
-    echo "    Creating symlink for $APP..."
-    ln -s "$SRCDIR" "$TARGETDIR"
-  done
-
-  echo "Downloading dependencies..."
-  brew cask install adium atom hipchat scroll-reverser sourcetree
+  vscode_user_dir="${HOME}/Library/Application Support/Code/User"
+  mkdir -p "$vscode_user_dir"
+  ln -s "${PROFILE_PATH}/Dotfiles/vscode/user.json" "$vscode_user_dir/"
+  ln -s "${PROFILE_PATH}/Dotfiles/vscode/settings.json" "$vscode_user_dir/"
 
   echo "Setting standard preferences..."
   defaults write com.apple.dock orientation left

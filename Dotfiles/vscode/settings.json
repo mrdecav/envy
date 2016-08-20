@@ -1,0 +1,15 @@
+// Place your settings in this file to overwrite the default settings
+{
+  "editor.fontFamily": "Input Mono Condensed",
+  "editor.fontSize": 14,
+  "editor.renderIndentGuides": true,
+  "editor.rulers": [80,120],
+  "files.exclude": {
+    "**/.*.sw?": true,
+    "**/._*": true
+  },
+  "window.reopenFolders": "all",
+  "window.restoreFullscreen": true,
+  "window.zoomLevel": -1,
+  "explorer.openEditors.visible": 0
+}
