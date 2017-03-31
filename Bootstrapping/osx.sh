@@ -1,13 +1,7 @@
 #!/bin/bash
 
-if [ `uname -s` = "Darwin" ]
-then
-  REPOS_ROOT=~/Repositories
-else
-  REPOS_ROOT=~/repos
-fi
-
-REPOS_LIBNAME=pb-envy
+REPOS_ROOT=~/dev
+REPOS_LIBNAME=envy
 PROFILE_PATH="${REPOS_ROOT}/${REPOS_LIBNAME}"
 
 WRITE_PROFILE="YES"
@@ -65,32 +59,5 @@ fi
 if [ $WRITE_GITIGNORE ]
 then
   ln -s "${PROFILE_PATH}/Dotfiles/git/gitconfig" "${HOME}/.gitconfig"
-fi
-
-if [ `uname -s` = "Darwin" ]
-then
-  vscode_user_dir="${HOME}/Library/Application Support/Code/User"
-  mkdir -p "$vscode_user_dir"
-  ln -s "${PROFILE_PATH}/Dotfiles/vscode/user.json" "$vscode_user_dir/"
-  ln -s "${PROFILE_PATH}/Dotfiles/vscode/settings.json" "$vscode_user_dir/"
-
-  echo "Setting standard preferences..."
-  defaults write com.apple.dock orientation left
-  defaults write com.apple.dock pinning end
-  defaults write com.apple.dock expose-animation-duration -float 0.1
-  defaults write com.apple.Dock autohide-delay -float 0
-  defaults write com.apple.Safari NSUserKeyEquivalents -dict-add Back "\U232b"
-  defaults write com.google.Chrome.plist AppleEnableSwipeNavigateWithScrolls -bool FALSE
-  defaults write com.pilotmoon.scroll-reverser ReverseTrackpad 0
-  defaults write com.pilotmoon.scroll-reverser ReverseX 0
-  killall Dock
-
-  #echo "Setting up Chrome preferences..."
-
-  #CHROME_STYLESHEET="$HOME/Library/Application Support/Google/Chrome/Default/User StyleSheets/Custom.css"
-  #echo "$CHROME_STYLESHEET"
-  #rm "$CHROME_STYLESHEET"
-  #ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/chrome/Custom.css" "$CHROME_STYLESHEET"
-  ln -s "$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/subl" "$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 fi
 
