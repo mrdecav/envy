@@ -1,23 +1,42 @@
 # bash_profile
 
-export PATH=$PATH:\
+__dirname="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles"
+git_etc="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/git"
+
+source "${__dirname}/functions.sh"
+
+# Build a nice PATH
+export PATH=\
+/usr/local/bin:\
+/usr/local/apache-maven/bin:\
+$PATH:\
+/opt/local/bin:\
+/opt/local/sbin:\
 $HOME/Applications:\
 $HOME/bin:\
 $REPOS_ROOT/$REPOS_LIBNAME/Applications:\
-$REPOS_ROOT/$REPOS_LIBNAME/Scripts
+$REPOS_ROOT/$REPOS_LIBNAME/Scripts:\
+/usr/local/mongodb/bin:\
+/usr/local/play:\
+/usr/local/scala/bin:\
+/usr/local/neo4j/bin:\
+node_modules/.bin:\
+$(npm config get prefix)/bin
 
 export CLASSPATH=$CLASSPATH:.:build:/usr/local/lib/java
 export USRVIMRUNTIME="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/vim"
 export VIMINIT="set runtimepath=$USRVIMRUNTIME,\$VIMRUNTIME|source ${USRVIMRUNTIME}/vimrc"
 export LYNX_CFG="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/lynxrc"
 export LYNX_LSS="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/lynx/lynx.lss"
+export ARTISTIC_STYLE_OPTIONS="${REPOS_ROOT}/${REPOS_LIBNAME}/Dotfiles/astylerc"
 export BC_ENV_ARGS="-l"
 export LC_CTYPE="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-export BLOCKSIZE=K;
-export EDITOR=vim;
-export PAGER=less;
+export BLOCKSIZE=K
+export EDITOR=vim
+export PAGER=less
+export LESS=-R
 
 export HOST_SETTINGS_FILE=$REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/.host-settings
 
@@ -35,7 +54,9 @@ if [ `uname` = "Darwin" ]
 then
     # Mac OS X-specific
     alias ls='ls -FGw'
-    JAVA_HOME=/Library/Java/Home
+
+    export JAVA_HOME="$(find_java)/Contents/Home"
+    export GROOVY_HOME=/usr/local/opt/groovy/libexec
 else
     alias ls='ls --color -F'
 fi
@@ -63,6 +84,7 @@ do
     alias $i..="$CDCMD"
 done
 alias ..='cd ..'
+alias find.='find .'
 
 # Color prompt based on hostname.
 PROMPTCOLOR=`host-settings get prompt-color 2>/dev/null`
@@ -73,9 +95,95 @@ fi
 
 # set the prompt
 export PROMPTCOLOR
-export PS1="\[\033["$PROMPTCOLOR"m\][\!]\u@\h:\$(echo \044PWD)\\\$\[\033[0m\] "
+export PS1="\[\e[37m\][\!]"\
+"\[\e[${PROMPTCOLOR};4m\]"\
+"\$(echo \044USER)@\$(echo \044HOSTNAME)"\
+"\[\e[0m\e[37m\]:"\
+"\[\e[32m\]\$(__vcsinfo 2>/dev/null)\[\e[37m\]"\
+"\$(echo \044{PWD#$REPOS_ROOT/})\[\e[0m\]\$ "
+
+#export PS1="\$(__prompt_fn \!)"
 
 # figure out which history file to use
 export HISTFILESIZE=5000
 export HISTSIZE=5000
 export IGNOREEOF=999999
+
+# figure out which VCS is being used for the working directory
+function __vcswhich {
+  if [ "$(git status 2>/dev/null)" ]
+  then
+    echo "git"
+  elif [ "$(svn info 2>/dev/null)" ]
+  then
+    echo "svn"
+  elif [ "$(hg status 2>/dev/null)" ]
+  then
+    echo "hg"
+  fi
+}
+
+# compute current version control system info for the working directory
+function __vcsinfo {
+  SVNINFO=$(svn info 2>/dev/null)
+  HGINFO=$(hg info 2>/dev/null)
+  GITBRANCH=`git_current_branch`
+  REPOS_PART=${PWD#$REPOS_ROOT/}
+
+  if [ "$PWD" == "$REPOS_PART" ]; then
+    echo -n
+  elif [ -z "$SVNINFO" ]; then
+    if [ -z "$GITBRANCH" ]; then
+      echo -n
+    else
+      echo -n "[git:$GITBRANCH]"
+    fi
+  else
+    echo -n "[svn]"
+  fi
+}
+
+# Compute a prompt from the current directory
+function __prompt_fn {
+  SVNINFO=$(svn info 2>/dev/null)
+  GITBRANCH=`git_current_branch`
+
+  REPOS_PART=${PWD#$REPOS_ROOT/}
+
+  prefix="\033[37m["$1"]\033["$PROMPTCOLOR";4m"$USER"@"$HOSTNAME"\033[0m\033[37m:"
+  suffix="\$\033[0m"
+
+  if [ "$PWD" == "$REPOS_PART" ]; then
+    echo -n ${prefix}${PWD}${suffix}" "
+  elif [ -z "$SVNINFO" ]; then
+    if [ -z "$GITBRANCH" ]; then
+      echo -n ${prefix}${REPOS_PART}${suffix}" "
+    else
+      echo -n ${prefix}"\033[32m[\033[32;4;1mgit\033[0m\033[32m:"${GITBRANCH}"]\033[37m"${REPOS_PART}${suffix}" "
+    fi
+  else
+    echo -n ${prefix}"\033[32m[\033[32;4;1msvn\033[0m\033[32m]\033[37m"${REPOS_PART}${suffix}" "
+  fi
+}
+
+function __git_remote_host {
+  email_host=`git config user.email | awk 'BEGIN { FS="@"; } { print $2 }'`
+
+  repos_url=`git config remote.origin.url`
+  repos_url_no_protocol=${repos_url#*//}
+  repos_url_no_user=${repos_url_no_protocol#*@}
+  repos_url_no_path=${repos_url_no_user%%/*}
+  repos_hostname=${repos_url_no_path%%:*}
+
+  echo $repos_hostname
+  echo $email_host
+}
+
+function git_current_branch {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}
+
+source "${git_etc}/git-completion.bash"
+
+# git config --global core.excludesfile $REPOS_ROOT/$REPOS_LIBNAME/Dotfiles/git/gitignore

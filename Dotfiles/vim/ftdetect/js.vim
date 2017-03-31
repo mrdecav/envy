@@ -13,6 +13,8 @@ function JSSkelTmpl()
         0r ${USRVIMRUNTIME}/skel/js-model.js
     elseif match(l:basename, "View$") > -1
         0r ${USRVIMRUNTIME}/skel/js-view.js
+    elseif match(l:basename, "Editor$") > -1
+        0r ${USRVIMRUNTIME}/skel/js-view.js
     else
         0r ${USRVIMRUNTIME}/skel/js-browser.js
         exe "normal Gdd5G$"

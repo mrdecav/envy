@@ -1,0 +1,283 @@
+/**********************************************/
+/*
+/* IR_Black Skin by Ben Truyman - 2011
+/*
+/* Based on Todd Werth's IR_Black:
+/* http://blog.toddwerth.com/entries/2
+/*
+/* Inspired by Darcy Clarke's blog post:
+/* http://darcyclarke.me/design/skin-your-chrome-inspector/
+/*
+/**********************************************/
+/* chrome-devtools://devtools/devTools.css */
+#-webkit-web-inspector {
+  /* @-webkit-keyframes webkit-error-level {
+    0%   { color: #f77; !important }
+    50%  { color: #f00; !important }
+    100% { color: #f77; !important }
+  } */
+  /**********************************************/
+  /* Prompt
+  /**********************************************/
+  /**********************************************/
+  /* Elements/Network
+  /**********************************************/
+  /**********************************************/
+  /* Layout
+  /**********************************************/
+  /**********************************************/
+  /* HTML
+  /**********************************************/
+  /**********************************************/
+  /* CSS
+  /**********************************************/
+  /**********************************************/
+  /* JavaScript
+  /**********************************************/ }
+  #-webkit-web-inspector ::-webkit-scrollbar {
+    width: 12px; }
+  #-webkit-web-inspector ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px; }
+  #-webkit-web-inspector ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); }
+  #-webkit-web-inspector .monospace, #-webkit-web-inspector .source-code {
+    font-family: "Source Code Pro", "Menlo", monospace !important;
+    font-size: 14px !important; }
+  #-webkit-web-inspector #main {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+    color: #f1f1f1; }
+    #-webkit-web-inspector #main .tabbed-pane-header-tab.selected {
+      color: black !important; }
+    #-webkit-web-inspector #main .pane > .title {
+      background: black !important;
+      color: white !important;
+      text-shadow: none !important;
+      font-size: 11px !important;
+      font-weight: normal !important; }
+      #-webkit-web-inspector #main .pane > .title::before {
+        content: url(chrome://devtools/Images/disclosureTriangleSmallRightWhite.png) !important; }
+    #-webkit-web-inspector #main .pane-title-button.element-state {
+      display: none !important; }
+    #-webkit-web-inspector #main .styles-element-state-pane {
+      font-family: "Lucida Grande" !important;
+      font-size: 11px !important;
+      background-color: black !important;
+      margin-top: 0px !important; }
+      #-webkit-web-inspector #main .styles-element-state-pane table {
+        display: inline-block !important; }
+      #-webkit-web-inspector #main .styles-element-state-pane tr {
+        display: inline-block !important; }
+      #-webkit-web-inspector #main .styles-element-state-pane td {
+        white-space: nowrap !important;
+        padding: 2px 4px !important; }
+    #-webkit-web-inspector #main .sidebar-separator {
+      background: black !important;
+      color: white !important;
+      text-shadow: none !important; }
+    #-webkit-web-inspector #main .styles-section.read-only {
+      background: none !important;
+      opacity: 0.8; }
+    #-webkit-web-inspector #main .pane > .body .info {
+      color: #999999 !important; }
+    #-webkit-web-inspector #main .outline-disclosure > ol {
+      color: white !important; }
+    #-webkit-web-inspector #main .text-editor-lines {
+      background-color: transparent !important;
+      border-right: none !important; }
+  #-webkit-web-inspector #toolbar {
+    border-top: none !important;
+    padding: 0px !important;
+    background: black !important; }
+    #-webkit-web-inspector #toolbar .toolbar-label {
+      color: white !important; }
+  #-webkit-web-inspector .sidebar {
+    background-color: rgba(0, 0, 0, 0.85) !important; }
+  #-webkit-web-inspector #console-messages {
+    background-color: rgba(0, 0, 0, 0.85); }
+    #-webkit-web-inspector #console-messages A {
+      color: #666 !important; }
+      #-webkit-web-inspector #console-messages A:hover {
+        color: #999 !important; }
+    #-webkit-web-inspector #console-messages .console-message {
+      color: #f1f1f1 !important; }
+    #-webkit-web-inspector #console-messages .console-message, #-webkit-web-inspector #console-messages .console-user-command {
+      border-bottom: 1px solid #444 !important; }
+    #-webkit-web-inspector #console-messages .console-user-command > .console-message-text {
+      color: #ffd2a7 !important; }
+  #-webkit-web-inspector #console-messages .console-formatted-number {
+    color: #ff73fd !important; }
+  #-webkit-web-inspector #console-messages .console-formatted-string {
+    color: #a8ff60 !important; }
+  #-webkit-web-inspector #console-messages .console-formatted-object {
+    color: #7c7c7c !important; }
+  #-webkit-web-inspector #console-messages .console-formatted-function {
+    color: #fff !important; }
+  #-webkit-web-inspector #console-messages .console-formatted-regexp {
+    color: #e9c062 !important; }
+  #-webkit-web-inspector #console-messages .console-group-messages .section .header .title {
+    color: #f1f1f1 !important; }
+  #-webkit-web-inspector #console-messages .section .properties .name, #-webkit-web-inspector .event-properties .name {
+    color: #96cbfe !important; }
+  #-webkit-web-inspector #console-messages .console-group-messages .section .header::before,
+  #-webkit-web-inspector #console-messages .properties-tree li.parent::before {
+    content: url(chrome-devtools://devtools/Images/treeRightTriangleWhite.png) !important; }
+  #-webkit-web-inspector #console-messages .console-group-messages .section.expanded .header::before,
+  #-webkit-web-inspector #console-messages .properties-tree li.parent.expanded::before {
+    content: url(chrome-devtools://devtools/Images/treeDownTriangleWhite.png) !important; }
+  #-webkit-web-inspector #console-messages .console-error-level .console-message-text {
+    color: #f66 !important;
+    -webkit-animation-name: webkit-error-level;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-timing-function: ease-in-out; }
+  #-webkit-web-inspector #console-messages .console-user-command::before {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OTMzNzdGNUZDMTA1MTFFMDgwRUZGQ0JCMjgzMzU0MTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTMzNzdGNjBDMTA1MTFFMDgwRUZGQ0JCMjgzMzU0MTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5MzM3N0Y1REMxMDUxMUUwODBFRkZDQkIyODMzNTQxNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5MzM3N0Y1RUMxMDUxMUUwODBFRkZDQkIyODMzNTQxNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pia6udAAAAB5SURBVHjaYvz//z8DMYAFxli9ejWI6oByK5AVhYaGIhRCgQsQGwOxIFTxe5gEE5pCVyA+C8RpQLwbqgmrwvdQxauhis6AbMamEASUkEwCabyHTWE51BQlqBNMoDSKQhckX3dCFd3DCB4g2AP16VkoGwUwEhvgAAEGAAzQHBRSxqPRAAAAAElFTkSuQmCC) !important; }
+  #-webkit-web-inspector #console-prompt {
+    color: #f1f1f1 !important; }
+  #-webkit-web-inspector #console-prompt::before {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjRGNTc2MTZDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjRGNTc2MTdDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5MzM3N0Y2MUMxMDUxMUUwODBFRkZDQkIyODMzNTQxNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5MzM3N0Y2MkMxMDUxMUUwODBFRkZDQkIyODMzNTQxNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Plf0eOsAAAB4SURBVHjaYvz//z8DMYAFxph+BqyhA8qtQFaUacKIUAgFLkBsDMSCUMXvYRJMaApdgfgsEKcB8W6oJqwK30MVr4YqOgPEodgUgoASkkkgjfewKSyHmqIEdYIJlEZR6ILk606oonsYwQMEe6A+PQtlowBGYgMcIMAAF2wcFPVNZx8AAAAASUVORK5CYII=) !important;
+    color: #fff !important; }
+  #-webkit-web-inspector #storage-views .script-view,
+  #-webkit-web-inspector #network-views .script-view,
+  #-webkit-web-inspector #script-resource-views .script-view {
+    color: #ccc !important; }
+  #-webkit-web-inspector #storage-views .script-view,
+  #-webkit-web-inspector #elements-content,
+  #-webkit-web-inspector #network-views .text-editor-contents,
+  #-webkit-web-inspector #script-resource-views .script-view {
+    background: #242424 !important;
+    font-size: 12px !important; }
+  #-webkit-web-inspector #elements-content .highlight {
+    color: #f1f1f1; }
+  #-webkit-web-inspector #elements-content li.hovered:not(.selected) .selection {
+    background: rgba(255, 255, 255, 0.2) !important; }
+  #-webkit-web-inspector #elements-content .selection.selected {
+    z-index: 0 !important; }
+  #-webkit-web-inspector #elements-content ol:focus li.selected .selection {
+    background: #3F4360 !important; }
+  #-webkit-web-inspector #elements-content .selected .highlight {
+    position: relative;
+    z-index: 2; }
+  #-webkit-web-inspector #elements-content .selected {
+    background-color: #4c4d5d !important; }
+  #-webkit-web-inspector #elements-content .editing {
+    background-color: #242424 !important; }
+  #-webkit-web-inspector #elements-content .parent::before {
+    content: url(chrome-devtools://devtools/Images/treeRightTriangleWhite.png) !important;
+    position: relative;
+    z-index: 999; }
+  #-webkit-web-inspector #elements-content .parent.expanded::before {
+    content: url(chrome-devtools://devtools/Images/treeDownTriangleWhite.png) !important; }
+  #-webkit-web-inspector .webkit-html-comment {
+    color: #7c7c7c !important; }
+  #-webkit-web-inspector .webkit-html-tag {
+    color: #96cbfe !important; }
+  #-webkit-web-inspector .webkit-html-attribute-name {
+    color: #ffd2a7 !important; }
+  #-webkit-web-inspector .webkit-html-attribute-value {
+    color: #a8ff60 !important; }
+  #-webkit-web-inspector .webkit-css-comment {
+    color: #7c7c7c !important; }
+  #-webkit-web-inspector .webkit-css-keyword {
+    color: #f9ee98 !important; }
+  #-webkit-web-inspector .webkit-css-important {
+    color: #f9ee98 !important; }
+  #-webkit-web-inspector .webkit-css-selector {
+    color: #eeeeee !important; }
+  #-webkit-web-inspector #storage-views .webkit-html-text-node,
+  #-webkit-web-inspector #elements-content .webkit-html-text-node,
+  #-webkit-web-inspector #network-views .webkit-html-text-node,
+  #-webkit-web-inspector #script-resource-views .webkit-html-text-node
+  #storage-views .webkit-html-css-node,
+  #-webkit-web-inspector #elements-content .webkit-html-css-node,
+  #-webkit-web-inspector #network-views .webkit-html-css-node,
+  #-webkit-web-inspector #script-resource-views .webkit-html-css-node {
+    color: #c2c3c3 !important; }
+  #-webkit-web-inspector #storage-views .webkit-html-js-node,
+  #-webkit-web-inspector #elements-content .webkit-html-js-node,
+  #-webkit-web-inspector #network-views .webkit-html-js-node,
+  #-webkit-web-inspector #script-resource-views .webkit-html-js-node {
+    color: #c2c3c3 !important; }
+  #-webkit-web-inspector #storage-views .webkit-html-resource-link,
+  #-webkit-web-inspector #elements-content .webkit-html-resource-link,
+  #-webkit-web-inspector #network-views .webkit-html-resource-link,
+  #-webkit-web-inspector #script-resource-views .webkit-html-resource-link,
+  #-webkit-web-inspector #storage-views .webkit-html-external-link,
+  #-webkit-web-inspector #elements-content .webkit-html-external-link,
+  #-webkit-web-inspector #network-views .webkit-html-external-link,
+  #-webkit-web-inspector #script-resource-views .webkit-html-external-link {
+    color: #ff73fd !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-selector,
+  #-webkit-web-inspector #elements-content .webkit-css-selector,
+  #-webkit-web-inspector #network-views .webkit-css-selector,
+  #-webkit-web-inspector #script-resource-views .webkit-css-selector {
+    color: #62b1fe !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-property,
+  #-webkit-web-inspector #elements-content .webkit-css-property,
+  #-webkit-web-inspector #network-views .webkit-css-property,
+  #-webkit-web-inspector #script-resource-views .webkit-css-property {
+    color: #fff !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-number,
+  #-webkit-web-inspector #elements-content .webkit-css-number,
+  #-webkit-web-inspector #network-views .webkit-css-number,
+  #-webkit-web-inspector #script-resource-views .webkit-css-number {
+    color: #ff73fd !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-at-rule,
+  #-webkit-web-inspector #elements-content .webkit-css-at-rule,
+  #-webkit-web-inspector #network-views .webkit-css-at-rule,
+  #-webkit-web-inspector #script-resource-views .webkit-css-at-rule {
+    color: #96cbfe !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-string,
+  #-webkit-web-inspector #elements-content .webkit-css-string,
+  #-webkit-web-inspector #network-views .webkit-css-string,
+  #-webkit-web-inspector #script-resource-views .webkit-css-string {
+    color: #a8ff60 !important; }
+  #-webkit-web-inspector #storage-views .webkit-css-url,
+  #-webkit-web-inspector #elements-content .webkit-css-url,
+  #-webkit-web-inspector #network-views .webkit-css-url,
+  #-webkit-web-inspector #script-resource-views .webkit-css-url {
+    color: #c6c5fe !important; }
+  #-webkit-web-inspector #storage-views .webkit-line-content,
+  #-webkit-web-inspector #elements-content .webkit-line-content,
+  #-webkit-web-inspector #network-views .webkit-line-content,
+  #-webkit-web-inspector #script-resource-views .webkit-line-content,
+  #-webkit-web-inspector #storage-views .webkit-javascript-ident,
+  #-webkit-web-inspector #elements-content .webkit-javascript-ident,
+  #-webkit-web-inspector #network-views .webkit-javascript-ident,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-ident {
+    color: #fff !important; }
+  #-webkit-web-inspector #storage-views .webkit-javascript-keyword,
+  #-webkit-web-inspector #elements-content .webkit-javascript-keyword,
+  #-webkit-web-inspector #network-views .webkit-javascript-keyword,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-keyword {
+    color: #cfcb90 !important; }
+  #-webkit-web-inspector #storage-views .webkit-javascript-comment,
+  #-webkit-web-inspector #elements-content .webkit-javascript-comment,
+  #-webkit-web-inspector #network-views .webkit-javascript-comment,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-comment {
+    color: #7c7c7c !important; }
+  #-webkit-web-inspector #storage-views .webkit-javascript-string,
+  #-webkit-web-inspector #elements-content .webkit-javascript-string,
+  #-webkit-web-inspector #network-views .webkit-javascript-string,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-string {
+    color: #a8ff60 !important; }
+  #-webkit-web-inspector #storage-views .webkit-javascript-number,
+  #-webkit-web-inspector #elements-content .webkit-javascript-number,
+  #-webkit-web-inspector #network-views .webkit-javascript-number,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-number {
+    color: #ff73fd !important; }
+  #-webkit-web-inspector #storage-views .webkit-javascript-regexp,
+  #-webkit-web-inspector #elements-content .webkit-javascript-regexp,
+  #-webkit-web-inspector #network-views .webkit-javascript-regexp,
+  #-webkit-web-inspector #script-resource-views .webkit-javascript-regexp {
+    color: #e9c062 !important; }
+
+.styles-section .selector-matches {
+  color: white !important;
+  font-weight: bold;
+  text-decoration: underline; }
+
+.sidebar-tabbed-pane .tabbed-pane-header {
+  background: black !important; }
