@@ -35,7 +35,7 @@ brew cask install font-material-icons
 
 echo "Installing AppStore packages..."
 brew install mas
-mas signin "me@decav.com"
+mas signin
 
 mas install 407963104 # Pixelmator
 mas install 824171161 # Affinity Designer
