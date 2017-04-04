@@ -23,3 +23,20 @@ brew cask install microsoft-office
 brew cask install spotify
 brew cask install zoomus
 brew cask install sketchbook
+
+echo "Installing typefaces..."
+brew tap caskroom/fonts
+brew cask install font-montserrat
+brew cask install font-raleway
+brew cask install font-roboto
+brew cask install font-open-sans
+brew cask install font-fontawesome
+brew cask install font-material-icons
+
+echo "Installing AppStore packages..."
+brew install mas
+mas signin "me@decav.com"
+
+mas install 407963104 # Pixelmator
+mas install 824171161 # Affinity Designer
+
