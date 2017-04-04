@@ -23,6 +23,7 @@ brew cask install microsoft-office
 brew cask install spotify
 brew cask install zoomus
 brew cask install sketchbook
+brew cask install sketch
 
 echo "Installing typefaces..."
 brew tap caskroom/fonts
